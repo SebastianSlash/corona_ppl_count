@@ -9,9 +9,9 @@ ldr = LightSensor(4)
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-def on_message(client, userdata, topic):
+def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
-def on_publish(client, userdata, msg):
+def on_publish(client, userdata, topic):
     print("value published succesfully to: "+topic)
 client = mqtt.Client(client_id=id_pi, clean_session=False)
 client.on_connect = on_connect
