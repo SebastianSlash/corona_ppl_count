@@ -13,7 +13,7 @@ def on_message(client, userdata, topic):
     print(msg.topic+" "+str(msg.payload))
 def on_publish(client, userdata, msg):
     print("value published succesfully to: "+topic)
-client = mqtt.Client(client_id=id_pi, clean_session=false)
+client = mqtt.Client(client_id=id_pi, clean_session=False)
 client.on_connect = on_connect
 client.on_message = on_message
 
