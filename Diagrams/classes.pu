@@ -1,0 +1,13 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Venue {
+  # capacity : integer
+  # space : bolean
+  # count : integer
+  Venue()
+  void person_entered()
+  void person_left()
+  get_count() : integer
+}
+@enduml
