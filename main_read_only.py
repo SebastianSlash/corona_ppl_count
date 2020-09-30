@@ -9,7 +9,7 @@ ldr = LightSensor(4)
 
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people"
-exit_topic = "entrance/+/people"
+exit_topic = "exit/+/people"
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -34,16 +34,17 @@ def on_log(client, userdata, level, buf):
     print("log: ",buf)
 
 client = mqtt.Client(client_id=own_name, clean_session=False)
-client.conected_flag = False
+client.connected_flag = False
 client.bad_connection_flag = False
 client.on_connect = on_connect
 client.on_message = on_message
 client.on_log = on_log
 
-client.message_callback_add(entrance_topic, on_msg_entered())
-client.message_callback_add(exit_topic, on_msg_left())
+client.message_callback_add(entrance_topic, on_msg_entered)
+client.message_callback_add(exit_topic, on_msg_left)
 
 client.connect(host=broker_ip)
+client.loop_start() #this has been missing!! not sure if it goes before or after connect
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
@@ -51,7 +52,7 @@ if client.bad_connection_flag:
     client.loop_stop()    #Stop loop
     sys.exit()
 
-client.subscribe(topic=exit_topic)
+client.subscribe(topic=entrance_topic)
 
 client.loop_start()
 
@@ -74,7 +75,7 @@ class Venue:
 
 HalleBilfingen = Venue(capacity=60)
 
-while True
+while True:
     while space:
         print("Noch ", 60-count, "Plätze frei")
     begin_full = True
