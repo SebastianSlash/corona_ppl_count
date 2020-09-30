@@ -8,31 +8,14 @@ broker_ip = "192.168.178.56"
 ldr = LightSensor(4)
 
 own_name = socket.gethostname() # get hostname as ID for publishing
-
-def get_entrance_topic(this_device):
-    if this_device is "entrance":
-        return "entrance/"+own_name+"/people"
-    else:
-        return "entrance/+/people"
-def get_exit_topic(this_device):
-    if this_device is "exit":
-        return "exit/"+own_name+"/people"
-    else:
-        return "exit/+/people"
-
 entrance_topic = "entrance/+/people"
 exit_topic = "entrance/+/people"
 
 def on_msg_entered(client, userdata, message):
-    # do what needs to be done if a person enters the venue
-    #venue.person_entered()
-    # append to text file time and ammount of persons in venue
-    return 0 #just a space holder
+    print("one person has entered the venue")
+    count += 1
 def on_msg_left(client, userdata, message):
-    # do what needs to be done if a person leaves the venue
-    #venue.person_left()
-    # append to text file time and ammount of persons in venue
-    return 0 # just a space holder
+    print("one person has left the venue")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -84,31 +67,23 @@ class Venue:
         self.count = 0
     def person_entered(self):
         self.count += 1
-
     def person_left(self):
         self.count -= 1
-
     def get_count(self):
         return self.count
 
 HalleBilfingen = Venue(capacity=60)
 
-
-
-while space:
-    print("Noch ", 60-count, "Plätze frei")
-    if count =< 60:
-        while interrupt is False:
-            if ldr.value < 0.1:
-                client.publish(entrance_topic, HalleBilfinge.count)
-                interrupt = True
-        while interrupt is True:
-            if ldr.value > 0.1:
-                interrupt = False
-    else:
-        space = False
-        print("Die Halle ist derzeit ausgelastet")
-while not space:
+while True
+    while space:
+        print("Noch ", 60-count, "Plätze frei")
+    begin_full = True
+    while not space:
+        if begin_full:
+            print("Die Halle ist derzeit voll.")
+            print("Bitte haben sie Geduld")
+        else:
+            begin_full = False
 
 sleep(5)
 client.loop_stop()
