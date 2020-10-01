@@ -3,62 +3,27 @@ from time import sleep
 from signal import pause
 import paho.mqtt.client as mqtt
 import socket
+from Venue import Venue
+from client_functions import get_device_topic
 
-class Venue:
-    def __init__(self, capacity, space=True):
-        self._capacity = capacity
-        self._space = True
-        self._count = 0
-    def person_entered(self):
-        self._count += 1
-    def person_left(self):
-        self._count -= 1
-    def get_count(self):
-        return self._count
-    def get_capacity(self):
-        return self._capacity
-    def get_space(self):
-        return self._space
-    def is_full(self):
-        self._space = False
-    def not_full(self):
-        self._space = True
-    def print_cur_visitors(self):
-        print("there are ", self._count, " people at the venue")
-
-def get_device_topic(this_device):
-    if this_device is "entrance":
-        return "entrance/"+own_name+"/people"
-    elif this_device is "exit":
-        return "exit/"+own_name+"/people"
-
-ldr = LightSensor(4)
-led = LED(2)
-Hall = Venue(capacity=10) # create venue object and set venue capacity
-broker_ip = "192.168.178.56"
-own_name = socket.gethostname() # get hostname as ID for publishing
-entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
-exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
-topic = get_device_topic("entrance") # set topic of this pi
-
-def on_msg_entered(client, userdata, message):
+def on_msg_entered(client, userdata, message, venue):
     print("one person has entered the venue")
-    Hall.person_entered()
-    Hall.print_cur_visitors()
-    if Hall.get_count() >= Hall.get_capacity():
-        Hall.is_full()
-    print("Hall count is:    ", Hall.get_count())
-    print("Hall capacity is: ", Hall.get_capacity())
-    print("Hall still has space: ", Hall.get_space())
-def on_msg_left(client, userdata, message):
+    venue.person_entered()
+    venue.print_cur_visitors()
+    if venue.get_count() >= venue.get_capacity():
+        venue.is_full()
+    print("visitor count is:  ", venue.get_count())
+    print("venue capacity is: ", venue.get_capacity())
+    print("venue still has space: ", venue.get_space())
+def on_msg_left(client, userdata, message, venue):
     print("one person has left the venue")
-    if Hall.get_count() == Hall.get_capacity():
-        Hall.not_full()
-    Hall.person_left()
-    Hall.print_cur_visitors()
-    print("Hall count is:    ", Hall.get_count())
-    print("Hall capacity is: ", Hall.get_capacity())
-    print("Hall still has space: ", Hall.get_space())
+    if venue.get_count() == venue.get_capacity():
+        venue.not_full()
+    venue.person_left()
+    venue.print_cur_visitors()
+    print("visitor count is:  ", venue.get_count())
+    print("venue capacity is: ", venue.get_capacity())
+    print("venue still has space: ", venue.get_space())
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -74,6 +39,17 @@ def on_publish(client, userdata, topic):
     print("value published succesfully to: "+topic)
 def on_log(client, userdata, level, buf):
     print("log: ",buf)
+
+ldr = LightSensor(4)
+led = LED(2)
+Hall = Venue(capacity=10) # create venue object and set venue capacity
+broker_ip = "192.168.178.56"
+own_name = socket.gethostname() # get hostname as ID for publishing
+entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
+exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
+topic = get_device_topic("entrance") # set topic of this pi
+
+
 
 client = mqtt.Client(client_id=own_name, clean_session=False)
 client.connected_flag = False
@@ -96,7 +72,6 @@ if client.bad_connection_flag:
     client.loop_stop()    #Stop loop
     sys.exit()
 
-
 led.off()
 interrupt = False
 
@@ -107,8 +82,6 @@ while True:
         if ldr.value < 0.1:
             client.publish(topic, 1)
             interrupt = True
-
-
 
     while interrupt is True:
         if ldr.value > 0.1:

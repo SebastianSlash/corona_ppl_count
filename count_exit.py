@@ -3,7 +3,7 @@ from time import sleep
 from signal import pause
 import paho.mqtt.client as mqtt
 import socket
-
+import Venue
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 ldr = LightSensor(4)
