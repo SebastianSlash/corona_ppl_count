@@ -47,12 +47,18 @@ def on_msg_entered(client, userdata, message):
     Hall.print_cur_visitors()
     if Hall.get_count() >= Hall.get_capacity():
         Hall.is_full()
+    print("Hall count is:    ", Hall.get_count())
+    print("Hall capacity is: ", Hall.get_capacity())
+    print("Hall still has space: ", Hall.get_space())
 def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     Hall.person_left()
     Hall.print_cur_visitors()
     if Hall.get_count() == Hall.get_capacity():
         Hall.not_full()
+    print("Hall count is:    ", Hall.get_count())
+    print("Hall capacity is: ", Hall.get_capacity())
+    print("Hall still has space: ", Hall.get_space())
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
