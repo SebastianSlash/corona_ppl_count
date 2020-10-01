@@ -11,11 +11,11 @@ own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people"
 exit_topic = "exit/+/people"
 
-def on_msg_entered(client, userdata, message):
-    print("one person has entered the venue")
-    count += 1
-def on_msg_left(client, userdata, message):
-    print("one person has left the venue")
+# def on_msg_entered(client, userdata, message):
+#     print("one person has entered the venue")
+#     count += 1
+# def on_msg_left(client, userdata, message):
+#     print("one person has left the venue")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -27,7 +27,8 @@ def on_connect(client, userdata, flags, rc):
         client.bad_connection_flag = True
 
 def on_message(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload))
+    print(msg.topic+" "+str(msg.payload)+"person entered")
+    count += 1
 def on_publish(client, userdata, topic):
     print("value published succesfully to: "+topic)
 def on_log(client, userdata, level, buf):
@@ -40,8 +41,9 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.on_log = on_log
 
-client.message_callback_add(entrance_topic, on_msg_entered)
-client.message_callback_add(exit_topic, on_msg_left)
+# client.message_callback_add(entrance_topic, on_msg_entered)
+# client.message_callback_add(exit_topic, on_msg_left)
+client.subscribe(topic=entrance_topic)
 
 client.connect(host=broker_ip)
 client.loop_start() #this has been missing!! not sure if it goes before or after connect
@@ -52,7 +54,7 @@ if client.bad_connection_flag:
     client.loop_stop()    #Stop loop
     sys.exit()
 
-client.subscribe(topic=entrance_topic)
+
 
 interrupt = False
 count = 50
@@ -75,7 +77,7 @@ HalleBilfingen = Venue(capacity=60)
 
 while True:
     while space:
-        print("Noch ", 60-count, "Plätze frei")
+        # print("Noch ", 60-count, "Plätze frei")
     begin_full = True
     while not space:
         if begin_full:
