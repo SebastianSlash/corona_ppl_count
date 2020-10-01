@@ -11,11 +11,10 @@ own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people"
 exit_topic = "exit/+/people"
 
-# def on_msg_entered(client, userdata, message):
-#     print("one person has entered the venue")
-#     count += 1
-# def on_msg_left(client, userdata, message):
-#     print("one person has left the venue")
+def on_msg_entered(client, userdata, message):
+    print("one person has entered the venue")
+def on_msg_left(client, userdata, message):
+    print("one person has left the venue")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -41,12 +40,13 @@ client.on_connect = on_connect
 client.on_message = on_message
 client.on_log = on_log
 
-# client.message_callback_add(entrance_topic, on_msg_entered)
-# client.message_callback_add(exit_topic, on_msg_left)
-client.subscribe(topic=entrance_topic)
+client.message_callback_add(entrance_topic, on_msg_entered)
+client.message_callback_add(exit_topic, on_msg_left)
 
 client.connect(host=broker_ip)
 client.loop_start() #this has been missing!! not sure if it goes before or after connect
+
+client.subscribe(topic=entrance_topic)
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
@@ -75,15 +75,15 @@ class Venue:
 
 HalleBilfingen = Venue(capacity=60)
 
-# while True:
-#
-#     begin_full = True
-#     while not space:
-#         if begin_full:
-#             print("Die Halle ist derzeit voll.")
-#             print("Bitte haben sie Geduld")
-#         else:
-#             begin_full = False
+while True:
+
+    begin_full = True
+    while not space:
+        if begin_full:
+            print("Die Halle ist derzeit voll.")
+            print("Bitte haben sie Geduld")
+        else:
+            begin_full = False
 
 sleep(5)
 client.loop_stop()
