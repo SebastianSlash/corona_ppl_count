@@ -75,15 +75,15 @@ class Venue:
 
 HalleBilfingen = Venue(capacity=60)
 
-while True:
-
-    begin_full = True
-    while not space:
-        if begin_full:
-            print("Die Halle ist derzeit voll.")
-            print("Bitte haben sie Geduld")
-        else:
-            begin_full = False
+# while True:
+#
+#     begin_full = True
+#     while not space:
+#         if begin_full:
+#             print("Die Halle ist derzeit voll.")
+#             print("Bitte haben sie Geduld")
+#         else:
+#             begin_full = False
 
 sleep(5)
 client.loop_stop()
