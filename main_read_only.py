@@ -28,7 +28,7 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload)+"person entered")
-    count += 1
+    # count += 1
 def on_publish(client, userdata, topic):
     print("value published succesfully to: "+topic)
 def on_log(client, userdata, level, buf):
@@ -76,7 +76,7 @@ class Venue:
 HalleBilfingen = Venue(capacity=60)
 
 while True:
-    
+
     begin_full = True
     while not space:
         if begin_full:
