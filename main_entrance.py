@@ -33,6 +33,7 @@ broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
 exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
+topic = entrance_topic # set topic of this pi
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -84,32 +85,15 @@ if client.bad_connection_flag:
     sys.exit()
 
 
-# led.off()
+led.off()
 interrupt = False
-
-
-while True:
-    # led.off()
-    begin_full = True
-    while not Hall.get_space():
-        if begin_full:
-            print("Die Halle ist derzeit voll.")
-            print("Bitte haben sie Geduld.")
-            # led.on()
-            begin_full = False
-
-sleep(5)
-client.loop_stop()
-pause()
-
-interrupt = False
-count = 0
 
 while True:
     print("Besucher: ", count)
+    led.off()
     while interrupt is False:
         if ldr.value < 0.1:
-            client.publish("entrance/"+id_pi+"/people", count)
+            client.publish(topic, 1)
             interrupt = True
 
         begin_full = True
@@ -117,9 +101,13 @@ while True:
             if begin_full:
                 print("Die Halle ist derzeit voll.")
                 print("Bitte haben sie Geduld.")
-                # led.on()
+                led.on()
                 begin_full = False
 
     while interrupt is True:
         if ldr.value > 0.1:
             interrupt = False
+
+sleep(5)
+client.loop_stop()
+pause()
