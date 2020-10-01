@@ -54,10 +54,8 @@ if client.bad_connection_flag:
 
 client.subscribe(topic=entrance_topic)
 
-client.loop_start()
-
 interrupt = False
-count = 0
+count = 50
 
 space = True
 

@@ -45,7 +45,6 @@ interrupt = False
 
 
 while True:
-    print("Besucher: ", count)
     while interrupt is False:
         if ldr.value < 0.1:
             client.publish(topic, 1)
