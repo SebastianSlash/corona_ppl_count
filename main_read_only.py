@@ -30,6 +30,7 @@ Hall = Venue(capacity=60)
 
 broker_ip = "192.168.178.56"
 ldr = LightSensor(4)
+led = LED(2)
 
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people"
@@ -45,7 +46,7 @@ def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     Hall.person_left()
     Hall.print_cur_visitors()
-    if Hall.get_count() >= Hall.get_capacity():
+    if Hall.get_count() = Hall.get_capacity():
         Hall.not_full()
 
 
@@ -87,20 +88,19 @@ if client.bad_connection_flag:
     sys.exit()
 
 
-
+led.off()
 interrupt = False
 count = 50
 
 Hall.count = 50
 
 while True:
-
+    led.off()
     begin_full = True
     while not Hall.get_space():
         if begin_full:
             print("Die Halle ist derzeit voll.")
             print("Bitte haben sie Geduld")
-        else:
             begin_full = False
 
 sleep(5)
