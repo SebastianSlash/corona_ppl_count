@@ -7,7 +7,7 @@ import socket
 class Venue:
     def __init__(self, capacity, space=True):
         self.capacity = capacity
-        self.space = space
+        self.space = True
         self.count = 0
     def person_entered(self):
         self.count += 1
@@ -15,10 +15,18 @@ class Venue:
         self.count -= 1
     def get_count(self):
         return self.count
+    def get_capacity(self):
+        return self.capacity
+    def get_space(self):
+        return self.space
+    def is_full(self):
+        self.space = False
+    def not_full(self):
+        self.space = True
     def print_cur_visitors(self):
         print("there are ", self.count, " people at the venue")
 
-HalleBilfingen = Venue(capacity=60)
+Hall = Venue(capacity=60)
 
 broker_ip = "192.168.178.56"
 ldr = LightSensor(4)
@@ -29,12 +37,16 @@ exit_topic = "exit/+/people"
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
-    HalleBilfingen.person_entered()
-    HalleBilfingen.print_cur_visitors()
+    Hall.person_entered()
+    Hall.print_cur_visitors()
+    if Hall.get_count() >= Hall.get_capacity():
+        Hall.is_full()
 def on_msg_left(client, userdata, message):
     print("one person has left the venue")
-    HalleBilfingen.person_left()
-    HalleBilfingen.print_cur_visitors()
+    Hall.person_left()
+    Hall.print_cur_visitors()
+    if Hall.get_count() >= Hall.get_capacity():
+        Hall.not_full()
 
 
 def on_connect(client, userdata, flags, rc):
@@ -79,12 +91,12 @@ if client.bad_connection_flag:
 interrupt = False
 count = 50
 
-space = True
+Hall.count = 50
 
 while True:
 
     begin_full = True
-    while not space:
+    while not Hall.get_space():
         if begin_full:
             print("Die Halle ist derzeit voll.")
             print("Bitte haben sie Geduld")
