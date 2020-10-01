@@ -28,7 +28,7 @@ class Venue:
 
 ldr = LightSensor(4)
 led = LED(2)
-Hall = Venue(capacity=60) # create venue object and set venue capacity
+Hall = Venue(capacity=10) # create venue object and set venue capacity
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
