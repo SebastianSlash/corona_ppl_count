@@ -4,6 +4,22 @@ from signal import pause
 import paho.mqtt.client as mqtt
 import socket
 
+class Venue:
+    def __init__(self, capacity, space=True):
+        self.capacity = capacity
+        self.space = space
+        self.count = 0
+    def person_entered(self):
+        self.count += 1
+    def person_left(self):
+        self.count -= 1
+    def get_count(self):
+        return self.count
+    def print_cur_visitors(self):
+        print("there are ", self.count, " people at the venue")
+
+HalleBilfingen = Venue(capacity=60)
+
 broker_ip = "192.168.178.56"
 ldr = LightSensor(4)
 
@@ -13,8 +29,12 @@ exit_topic = "exit/+/people"
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
+    HalleBilfingen.person_entered()
+    HalleBilfingen.print_cur_visitors()
 def on_msg_left(client, userdata, message):
     print("one person has left the venue")
+    HalleBilfingen.person_left()
+    HalleBilfingen.print_cur_visitors()
 
 
 def on_connect(client, userdata, flags, rc):
@@ -60,20 +80,6 @@ interrupt = False
 count = 50
 
 space = True
-
-class Venue:
-    def __init__(self, capacity, space=True):
-        self.capacity = capacity
-        self.space = space
-        self.count = 0
-    def person_entered(self):
-        self.count += 1
-    def person_left(self):
-        self.count -= 1
-    def get_count(self):
-        return self.count
-
-HalleBilfingen = Venue(capacity=60)
 
 while True:
 
