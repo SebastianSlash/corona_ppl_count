@@ -46,7 +46,7 @@ def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     Hall.person_left()
     Hall.print_cur_visitors()
-    if Hall.get_count() = Hall.get_capacity():
+    if Hall.get_count() == Hall.get_capacity():
         Hall.not_full()
 
 
