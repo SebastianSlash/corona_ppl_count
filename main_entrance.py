@@ -109,6 +109,7 @@ while True:
                 print("Bitte haben sie Geduld.")
                 led.on()
                 begin_full = False
+            sleep(1)
 
     while interrupt is True:
         if ldr.value > 0.1:
