@@ -7,7 +7,7 @@ import socket
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 ldr = LightSensor(4)
-pub_topic = "entrance/"+own_name+"/people"
+topic = "entrance/"+own_name+"/people"
 
 
 def on_connect(client, userdata, flags, rc):
