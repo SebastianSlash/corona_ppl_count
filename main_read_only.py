@@ -88,19 +88,20 @@ if client.bad_connection_flag:
     sys.exit()
 
 
-led.off()
+# led.off()
 interrupt = False
 count = 50
 
 Hall.count = 50
 
 while True:
-    led.off()
+    # led.off()
     begin_full = True
     while not Hall.get_space():
         if begin_full:
             print("Die Halle ist derzeit voll.")
-            print("Bitte haben sie Geduld")
+            print("Bitte haben sie Geduld.")
+            # led.on()
             begin_full = False
 
 sleep(5)
