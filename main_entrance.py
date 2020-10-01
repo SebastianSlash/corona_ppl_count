@@ -108,17 +108,19 @@ while True:
             client.publish(topic, 1)
             interrupt = True
 
-        begin_full = True
-        while not Hall.get_space():
-            if begin_full:
-                print("Die Halle ist derzeit voll.")
-                print("Bitte haben sie Geduld.")
-                led.on()
-                begin_full = False
+
 
     while interrupt is True:
         if ldr.value > 0.1:
             interrupt = False
+
+    begin_full = True
+    while not Hall.get_space():
+        if begin_full:
+            print("Die Halle ist derzeit voll.")
+            print("Bitte haben sie Geduld.")
+            led.on()
+            begin_full = False
 
 sleep(5)
 client.loop_stop()
