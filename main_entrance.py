@@ -52,10 +52,10 @@ def on_msg_entered(client, userdata, message):
     print("Hall still has space: ", Hall.get_space())
 def on_msg_left(client, userdata, message):
     print("one person has left the venue")
+    if Hall.get_count() == Hall.get_capacity():
+        Hall.not_full()
     Hall.person_left()
     Hall.print_cur_visitors()
-    if Hall.get_count() < Hall.get_capacity():
-        Hall.not_full()
     print("Hall count is:    ", Hall.get_count())
     print("Hall capacity is: ", Hall.get_capacity())
     print("Hall still has space: ", Hall.get_space())
@@ -115,7 +115,7 @@ while True:
             interrupt = False
 
     begin_full = True
-    while not Hall.get_space():
+    while not Hall.get_space(): # if capacity is full people entering will not be count
         if begin_full:
             print("Die Halle ist derzeit voll.")
             print("Bitte haben sie Geduld.")
