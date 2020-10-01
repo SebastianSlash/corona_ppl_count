@@ -89,7 +89,7 @@ led.off()
 interrupt = False
 
 while True:
-    print("Besucher: ", count)
+    print("Besucher: ", Hall.get_count())
     led.off()
     while interrupt is False:
         if ldr.value < 0.1:
