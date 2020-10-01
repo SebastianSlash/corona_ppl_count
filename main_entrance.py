@@ -54,7 +54,7 @@ def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     Hall.person_left()
     Hall.print_cur_visitors()
-    if Hall.get_count() == Hall.get_capacity():
+    if Hall.get_count() < Hall.get_capacity():
         Hall.not_full()
     print("Hall count is:    ", Hall.get_count())
     print("Hall capacity is: ", Hall.get_capacity())
@@ -115,7 +115,6 @@ while True:
                 print("Bitte haben sie Geduld.")
                 led.on()
                 begin_full = False
-            sleep(1)
 
     while interrupt is True:
         if ldr.value > 0.1:
