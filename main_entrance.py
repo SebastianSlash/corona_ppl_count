@@ -31,8 +31,8 @@ led = LED(2)
 Hall = Venue(capacity=60) # create venue object and set venue capacity
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
-entrance_topic = "entrance/+/people"
-exit_topic = "exit/+/people"
+entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
+exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -75,6 +75,7 @@ client.message_callback_add(exit_topic, on_msg_left)
 client.connect(host=broker_ip)
 client.loop_start()
 client.subscribe(topic=entrance_topic)
+client.subscribe(topic=exit_topic)
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
@@ -100,3 +101,25 @@ while True:
 sleep(5)
 client.loop_stop()
 pause()
+
+interrupt = False
+count = 0
+
+while True:
+    print("Besucher: ", count)
+    while interrupt is False:
+        if ldr.value < 0.1:
+            client.publish("entrance/"+id_pi+"/people", count)
+            interrupt = True
+
+        begin_full = True
+        while not Hall.get_space():
+            if begin_full:
+                print("Die Halle ist derzeit voll.")
+                print("Bitte haben sie Geduld.")
+                # led.on()
+                begin_full = False
+
+    while interrupt is True:
+        if ldr.value > 0.1:
+            interrupt = False

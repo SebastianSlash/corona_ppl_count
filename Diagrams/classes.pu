@@ -9,5 +9,10 @@ class Venue {
   void person_entered()
   void person_left()
   get_count() : integer
+  get_capacity() : integer
+  get_stapce() : bolean
+  void is_full()
+  void not_full()
+  void print_cur_visitors()
 }
 @enduml

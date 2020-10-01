@@ -7,7 +7,7 @@ import socket
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 ldr = LightSensor(4)
-topic = "entrance/"+own_name+"/people" # publish to main whenever someone enters the venue
+topic = "exit/"+own_name+"/people" # publish to main whenever someone leaves the venue
 
 
 def on_connect(client, userdata, flags, rc):
