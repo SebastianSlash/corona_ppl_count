@@ -26,6 +26,12 @@ class Venue:
     def print_cur_visitors(self):
         print("there are ", self._count, " people at the venue")
 
+def get_device_topic(this_device):
+    if this_device is "entrance":
+        return "entrance/"+own_name+"/people"
+    elif this_device is "exit":
+        return "exit/"+own_name+"/people"
+
 ldr = LightSensor(4)
 led = LED(2)
 Hall = Venue(capacity=10) # create venue object and set venue capacity
@@ -33,7 +39,7 @@ broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
 exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
-topic = entrance_topic # set topic of this pi
+topic = get_device_topic() # set topic of this pi
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
