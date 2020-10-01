@@ -76,8 +76,7 @@ class Venue:
 HalleBilfingen = Venue(capacity=60)
 
 while True:
-    while space:
-        # print("Noch ", 60-count, "Plätze frei")
+    
     begin_full = True
     while not space:
         if begin_full:
