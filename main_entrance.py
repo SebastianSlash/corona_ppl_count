@@ -39,7 +39,7 @@ broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
 exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
-topic = get_device_topic() # set topic of this pi
+topic = get_device_topic("entrance") # set topic of this pi
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
