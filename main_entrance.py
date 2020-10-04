@@ -77,7 +77,7 @@ client.on_log = on_log
 
 client.message_callback_add(entrance_topic, on_msg_entered)
 client.message_callback_add(exit_topic, on_msg_left)
-client.message_callback_add(topic_close, on_msg_close)
+# client.message_callback_add(topic_close, on_msg_close)
 
 client.connect(host=broker_ip)
 client.loop_start()
