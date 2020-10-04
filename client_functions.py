@@ -27,8 +27,8 @@ def create_statistic_file():
     new_csv = 'statistics/'+dt_string+'.csv'
     header = ['time', 'visitors', 'in/out']
     with open(new_csv, 'w', newline='') as csvfile:
-        csv_writer = csv.writer(csvfile)
-        spamwriter.writerow(header)
+        csv_writer = writer(csvfile)
+        csv_writer.writerow(header)
 
     # return name of created file
     return new_csv
