@@ -66,9 +66,7 @@ topic = get_device_topic("entrance") # set topic of this pi
 topic_visitors = "metrics/visitors" # topic for live update of visitor count
 topic_statistic = "metrics/statistic" # topic to save statistics
 
-
-
-client = mqtt.Client(client_id=own_name, clean_session=False)
+client = mqtt.Client(client_id=socket.gethostname(), clean_session=False)
 client.connected_flag = False
 client.bad_connection_flag = False
 client.on_connect = on_connect

@@ -2,6 +2,7 @@ from gpiozero import LED, LightSensor
 from time import sleep
 from signal import pause
 import paho.mqtt.client as mqtt
+import socket
 from client_functions import get_device_topic
 
 # -----------------------------------------------------------------------------
@@ -27,7 +28,7 @@ def on_log(client, userdata, level, buf):
 
 topic = get_device_topic("entrance") # topic for device at entrance
 
-client = mqtt.Client(client_id=own_name, clean_session=False)
+client = mqtt.Client(client_id=socket.gethostname(), clean_session=False)
 client.connected_flag = False
 client.bad_connection_flag = False
 client.on_connect = on_connect
