@@ -8,17 +8,17 @@ from client_functions import get_device_topic
 
 topic_visitors = "metrics/visitors"
 # topic_statistic = "metrics/statistics"
-topic_close = "order/close"
+# topic_close = "order/close"
 
 def on_msg_statistic(cleint, userdata, message):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
 
-def on_msg_close(client, userdata, message):
-    if message == 0:
-        Hall.close()
-    else:
-        Hall.open()
+# def on_msg_close(client, userdata, message):
+#     if message == 0:
+#         Hall.close()
+#     else:
+#         Hall.open()
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -96,26 +96,25 @@ led_green.on()
 interrupt = False
 
 while True:
-    if not Hall.is_closed():
-        print("Besucher: ", Hall.get_count())
-        led_red.off()
-        led_green.on()
-        while interrupt is False:
-            if ldr.value < 0.1:
-                client.publish(topic, 1)
-                interrupt = True
+    print("Besucher: ", Hall.get_count())
+    led_red.off()
+    led_green.on()
+    while interrupt is False:
+        if ldr.value < 0.1:
+            client.publish(topic, 1)
+            interrupt = True
 
-        while interrupt is True:
-            if ldr.value > 0.1:
-                interrupt = False
+    while interrupt is True:
+        if ldr.value > 0.1:
+            interrupt = False
 
-        begin_full = True
-        while not Hall.get_space(): # if capacity is full people entering will not be count
-            if begin_full:
-                print("Die Halle ist derzeit voll.")
-                print("Bitte haben sie Geduld.")
-                led_red.on()
-                begin_full = False
+    begin_full = True
+    while not Hall.get_space(): # if capacity is full people entering will not be count
+        if begin_full:
+            print("Die Halle ist derzeit voll.")
+            print("Bitte haben sie Geduld.")
+            led_red.on()
+            begin_full = False
 
 sleep(5)
 client.loop_stop()
