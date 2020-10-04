@@ -30,7 +30,7 @@ def on_msg_entered(client, userdata, message):
     print("venue capacity is: ", Hall.get_capacity())
     print("venue still has space: ", Hall.get_space())
     client.publish(topic_visitors, Hall.get_count())
-def on_msg_left(client, userdata, message, venue):
+def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     if Hall.get_count() == Hall.get_capacity():
         Hall.not_full()
