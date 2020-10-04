@@ -1,6 +1,6 @@
 @startuml
 skinparam classAttributeIconSize 0
-
+Venue <|-- Statistic
 class Venue {
   # capacity : integer
   # space : bolean
@@ -14,5 +14,12 @@ class Venue {
   void is_full()
   void not_full()
   void print_cur_visitors()
+}
+
+class Statistic {
+  # time : string
+  # io : integer
+  Statistic()
+
 }
 @enduml

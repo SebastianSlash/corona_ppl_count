@@ -6,6 +6,20 @@ import socket
 from Venue import Venue
 from client_functions import get_device_topic
 
+topic_visitors = "metrics/visitors"
+# topic_statistic = "metrics/statistics"
+topic_close = "order/close"
+
+def on_msg_statistic(cleint, userdata, message, venue):
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+
+def on_msg_close(client, userdata, message, venue):
+    if message:
+        venue.close()
+    else:
+        venue.open()
+
 def on_msg_entered(client, userdata, message, venue):
     print("one person has entered the venue")
     venue.person_entered()
@@ -15,6 +29,7 @@ def on_msg_entered(client, userdata, message, venue):
     print("visitor count is:  ", venue.get_count())
     print("venue capacity is: ", venue.get_capacity())
     print("venue still has space: ", venue.get_space())
+    client.publish(topic_visitors, venue.get_count())
 def on_msg_left(client, userdata, message, venue):
     print("one person has left the venue")
     if venue.get_count() == venue.get_capacity():
@@ -24,6 +39,7 @@ def on_msg_left(client, userdata, message, venue):
     print("visitor count is:  ", venue.get_count())
     print("venue capacity is: ", venue.get_capacity())
     print("venue still has space: ", venue.get_space())
+    client.publish(topic_visitors, venue.get_count())
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -41,7 +57,8 @@ def on_log(client, userdata, level, buf):
     print("log: ",buf)
 
 ldr = LightSensor(4)
-led = LED(2)
+led_red = LED(17)
+led_green = LED(18)
 Hall = Venue(capacity=10) # create venue object and set venue capacity
 broker_ip = "192.168.178.56"
 own_name = socket.gethostname() # get hostname as ID for publishing
@@ -72,28 +89,31 @@ if client.bad_connection_flag:
     client.loop_stop()    #Stop loop
     sys.exit()
 
-led.off()
+led_red.off()
+led_green.on()
 interrupt = False
 
 while True:
-    print("Besucher: ", Hall.get_count())
-    led.off()
-    while interrupt is False:
-        if ldr.value < 0.1:
-            client.publish(topic, 1)
-            interrupt = True
+    if not venue.get_closed():
+        print("Besucher: ", Hall.get_count())
+        led_red.off()
+        led_green.on()
+        while interrupt is False:
+            if ldr.value < 0.1:
+                client.publish(topic, 1)
+                interrupt = True
 
-    while interrupt is True:
-        if ldr.value > 0.1:
-            interrupt = False
+        while interrupt is True:
+            if ldr.value > 0.1:
+                interrupt = False
 
-    begin_full = True
-    while not Hall.get_space(): # if capacity is full people entering will not be count
-        if begin_full:
-            print("Die Halle ist derzeit voll.")
-            print("Bitte haben sie Geduld.")
-            led.on()
-            begin_full = False
+        begin_full = True
+        while not Hall.get_space(): # if capacity is full people entering will not be count
+            if begin_full:
+                print("Die Halle ist derzeit voll.")
+                print("Bitte haben sie Geduld.")
+                led_red.on()
+                begin_full = False
 
 sleep(5)
 client.loop_stop()
