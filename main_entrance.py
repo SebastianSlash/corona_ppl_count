@@ -12,7 +12,7 @@ topic_statistic = "metrics/statistic"
 statistic_file = create_statistic_file()
 def on_msg_statistic(cleint, userdata, message):
     current_time = strftime("%H:%M:%S", localtime())
-    row_contents = [current_time, Hall.get_count(), str(message.payload)]
+    row_contents = [current_time, Hall.get_count(), str(message.payload.decode('utf-8'))]
     append_list_as_row(statistic_file, row_contents)
 
 # def on_msg_close(client, userdata, message):
