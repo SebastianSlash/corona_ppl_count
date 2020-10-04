@@ -12,7 +12,7 @@ topic_statistic = "metrics/statistic"
 statistic_file = create_statistic_file()
 def on_msg_statistic(cleint, userdata, message):
     current_time = strftime("%H:%M:%S", localtime())
-    row_contents = [current_time, Hall.get_count(), message.payload]
+    row_contents = [current_time, Hall.get_count(), str(message.payload)]
     append_list_as_row(statistic_file, row_contents)
 
 # def on_msg_close(client, userdata, message):
@@ -43,7 +43,7 @@ def on_msg_left(client, userdata, message):
     print("venue capacity is: ", Hall.get_capacity())
     print("venue still has space: ", Hall.get_space())
     client.publish(topic_visitors, Hall.get_count())
-    client.publish(topic_statistic, 1)
+    client.publish(topic_statistic, 0)
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
