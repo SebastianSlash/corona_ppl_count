@@ -96,7 +96,7 @@ led_green.on()
 interrupt = False
 
 while True:
-    if not Hall.get_closed():
+    if not Hall.is_closed():
         print("Besucher: ", Hall.get_count())
         led_red.off()
         led_green.on()

@@ -20,9 +20,9 @@ class Venue:
         self._space = True
     def print_cur_visitors(self):
         print("there are ", self._count, " people at the venue")
-    def get_closed():
+    def is_closed(self):
         return self._closed
-    def close():
+    def close(self):
         self._closed = True
-    def open():
+    def open(self):
         self._closed = False
