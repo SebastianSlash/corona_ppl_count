@@ -83,7 +83,7 @@ client.connect(host=broker_ip)
 client.loop_start()
 client.subscribe(topic=entrance_topic)
 client.subscribe(topic=exit_topic)
-client.subscribe(topic=topic_close)
+# client.subscribe(topic=topic_close)
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
