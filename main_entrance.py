@@ -7,9 +7,9 @@ from Venue import Venue
 from client_functions import get_device_topic, append_list_as_row, create_statistic_file
 
 topic_visitors = "metrics/visitors"
-topic_statistic = "metrics/statistics"
+topic_statistic = "metrics/statistic"
 # topic_close = "order/close"
-statistics_file = create_statistic_file()
+statistic_file = create_statistic_file()
 def on_msg_statistic(cleint, userdata, message):
     current_time = strftime("%H:%M:%S", localtime())
     row_contents = [current_time, Hall.get_count(), message]
