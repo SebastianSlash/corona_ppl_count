@@ -10,36 +10,36 @@ topic_visitors = "metrics/visitors"
 # topic_statistic = "metrics/statistics"
 topic_close = "order/close"
 
-def on_msg_statistic(cleint, userdata, message, venue):
+def on_msg_statistic(cleint, userdata, message):
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
 
-def on_msg_close(client, userdata, message, venue):
+def on_msg_close(client, userdata, message):
     if message == 0:
-        venue.close()
+        Hall.close()
     else:
-        venue.open()
+        Hall.open()
 
-def on_msg_entered(client, userdata, message, venue):
+def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
-    venue.person_entered()
-    venue.print_cur_visitors()
-    if venue.get_count() >= venue.get_capacity():
-        venue.is_full()
-    print("visitor count is:  ", venue.get_count())
-    print("venue capacity is: ", venue.get_capacity())
-    print("venue still has space: ", venue.get_space())
-    client.publish(topic_visitors, venue.get_count())
+    Hall.person_entered()
+    Hall.print_cur_visitors()
+    if Hall.get_count() >= Hall.get_capacity():
+        Hall.is_full()
+    print("visitor count is:  ", Hall.get_count())
+    print("venue capacity is: ", Hall.get_capacity())
+    print("venue still has space: ", Hall.get_space())
+    client.publish(topic_visitors, Hall.get_count())
 def on_msg_left(client, userdata, message, venue):
     print("one person has left the venue")
-    if venue.get_count() == venue.get_capacity():
-        venue.not_full()
-    venue.person_left()
-    venue.print_cur_visitors()
-    print("visitor count is:  ", venue.get_count())
-    print("venue capacity is: ", venue.get_capacity())
-    print("venue still has space: ", venue.get_space())
-    client.publish(topic_visitors, venue.get_count())
+    if Hall.get_count() == Hall.get_capacity():
+        Hall.not_full()
+    Hall.person_left()
+    Hall.print_cur_visitors()
+    print("visitor count is:  ", Hall.get_count())
+    print("venue capacity is: ", Hall.get_capacity())
+    print("venue still has space: ", Hall.get_space())
+    client.publish(topic_visitors, Hall.get_count())
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -77,11 +77,13 @@ client.on_log = on_log
 
 client.message_callback_add(entrance_topic, on_msg_entered)
 client.message_callback_add(exit_topic, on_msg_left)
+client.message_callback_add(topic_close, on_msg_close)
 
 client.connect(host=broker_ip)
 client.loop_start()
 client.subscribe(topic=entrance_topic)
 client.subscribe(topic=exit_topic)
+client.subscribe(topic=topic_close)
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
@@ -94,7 +96,7 @@ led_green.on()
 interrupt = False
 
 while True:
-    if not venue.get_closed():
+    if not Hall.get_closed():
         print("Besucher: ", Hall.get_count())
         led_red.off()
         led_green.on()
