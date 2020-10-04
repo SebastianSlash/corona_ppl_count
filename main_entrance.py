@@ -1,24 +1,26 @@
 from gpiozero import LED, LightSensor
-from time import sleep
+from time import sleep, strftime, localtime
 from signal import pause
 import paho.mqtt.client as mqtt
 import socket
 from Venue import Venue
-from client_functions import get_device_topic
+from client_functions import get_device_topic, append_list_as_row, create_statistic_file
 
 topic_visitors = "metrics/visitors"
-# topic_statistic = "metrics/statistics"
+topic_statistic = "metrics/statistics"
 # topic_close = "order/close"
-
-# def on_msg_statistic(cleint, userdata, message):
-#     t = time.localtime()
-#     current_time = time.strftime("%H:%M:%S", t)
+statistics_file = create_statistic_file()
+def on_msg_statistic(cleint, userdata, message):
+    current_time = strftime("%H:%M:%S", localtime())
+    row_contents = [current_time, Hall.get_count(), message]
+    append_list_as_row(statistic_file, row_contents)
 
 # def on_msg_close(client, userdata, message):
 #     if message == 0:
 #         Hall.close()
 #     else:
 #         Hall.open()
+
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -30,6 +32,7 @@ def on_msg_entered(client, userdata, message):
     print("venue capacity is: ", Hall.get_capacity())
     print("venue still has space: ", Hall.get_space())
     client.publish(topic_visitors, Hall.get_count())
+    client.publish(topic_statistic, 1)
 def on_msg_left(client, userdata, message):
     print("one person has left the venue")
     if Hall.get_count() == Hall.get_capacity():
@@ -40,6 +43,7 @@ def on_msg_left(client, userdata, message):
     print("venue capacity is: ", Hall.get_capacity())
     print("venue still has space: ", Hall.get_space())
     client.publish(topic_visitors, Hall.get_count())
+    client.publish(topic_statistic, 1)
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -77,13 +81,13 @@ client.on_log = on_log
 
 client.message_callback_add(entrance_topic, on_msg_entered)
 client.message_callback_add(exit_topic, on_msg_left)
-# client.message_callback_add(topic_close, on_msg_close)
+client.message_callback_add(topic_statistic, on_msg_statistic)
 
 client.connect(host=broker_ip)
 client.loop_start()
 client.subscribe(topic=entrance_topic)
 client.subscribe(topic=exit_topic)
-# client.subscribe(topic=topic_close)
+client.subscribe(topic=topic_statistic)
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
