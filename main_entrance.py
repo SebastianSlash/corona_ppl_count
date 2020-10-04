@@ -15,7 +15,7 @@ def on_msg_statistic(cleint, userdata, message, venue):
     current_time = time.strftime("%H:%M:%S", t)
 
 def on_msg_close(client, userdata, message, venue):
-    if message:
+    if message == 0:
         venue.close()
     else:
         venue.open()
