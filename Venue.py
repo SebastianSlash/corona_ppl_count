@@ -3,7 +3,6 @@ class Venue:
         self._capacity = capacity
         self._space = True
         self._count = 0
-        self._closed = False
     def person_entered(self):
         self._count += 1
     def person_left(self):
@@ -20,9 +19,3 @@ class Venue:
         self._space = True
     def print_cur_visitors(self):
         print("there are ", self._count, " people at the venue")
-    def is_closed(self):
-        return self._closed
-    def close(self):
-        self._closed = True
-    def open(self):
-        self._closed = False

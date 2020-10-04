@@ -6,21 +6,19 @@ import socket
 from Venue import Venue
 from client_functions import get_device_topic, append_list_as_row, create_statistic_file
 
-topic_visitors = "metrics/visitors"
-topic_statistic = "metrics/statistic"
-# topic_close = "order/close"
-statistic_file = create_statistic_file()
+# -----------------------------------------------------------------------------
+# these should be set to fit the specific device constellation
+broker_ip = "192.168.178.56"
+Hall = Venue(capacity=10) # create venue object and set venue capacity
+ldr = LightSensor(4)
+led_red = LED(17)
+led_green = LED(18)
+# -----------------------------------------------------------------------------
+
 def on_msg_statistic(cleint, userdata, message):
     current_time = strftime("%H:%M:%S", localtime())
     row_contents = [current_time, Hall.get_count(), str(message.payload.decode('utf-8'))]
     append_list_as_row(statistic_file, row_contents)
-
-# def on_msg_close(client, userdata, message):
-#     if message == 0:
-#         Hall.close()
-#     else:
-#         Hall.open()
-
 
 def on_msg_entered(client, userdata, message):
     print("one person has entered the venue")
@@ -60,15 +58,13 @@ def on_publish(client, userdata, topic):
 def on_log(client, userdata, level, buf):
     print("log: ",buf)
 
-ldr = LightSensor(4)
-led_red = LED(17)
-led_green = LED(18)
-Hall = Venue(capacity=10) # create venue object and set venue capacity
-broker_ip = "192.168.178.56"
-own_name = socket.gethostname() # get hostname as ID for publishing
+
+statistic_file = create_statistic_file() # creates file to save statistics
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
 exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
-topic = get_device_topic("entrance", own_name) # set topic of this pi
+topic = get_device_topic("entrance") # set topic of this pi
+topic_visitors = "metrics/visitors" # topic for live update of visitor count
+topic_statistic = "metrics/statistic" # topic to save statistics
 
 
 
@@ -97,9 +93,11 @@ if client.bad_connection_flag:
 
 led_red.off()
 led_green.on()
-interrupt = False
 
+client.publish(topic_statistic, 0)
 client.publish(topic_visitors, Hall.get_count())
+
+interrupt = False
 while True:
     print("Besucher: ", Hall.get_count())
     led_red.off()

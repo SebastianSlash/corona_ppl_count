@@ -2,13 +2,13 @@ from gpiozero import LED, LightSensor
 from time import sleep
 from signal import pause
 import paho.mqtt.client as mqtt
-import socket
-import Venue
-broker_ip = "192.168.178.56"
-own_name = socket.gethostname() # get hostname as ID for publishing
-ldr = LightSensor(4)
-topic = "exit/"+own_name+"/people" # publish to main whenever someone leaves the venue
+from client_functions import get_device_topic
 
+# -----------------------------------------------------------------------------
+# these should be set to fit the specific device constellation
+broker_ip = "192.168.178.56"
+ldr = LightSensor(4)
+# -----------------------------------------------------------------------------
 
 def on_connect(client, userdata, flags, rc):
     if rc==0:
@@ -25,6 +25,8 @@ def on_publish(client, userdata, topic):
 def on_log(client, userdata, level, buf):
     print("log: ",buf)
 
+topic = get_device_topic("exit") # topic for device at exit
+
 client = mqtt.Client(client_id=own_name, clean_session=False)
 client.connected_flag = False
 client.bad_connection_flag = False
@@ -33,7 +35,7 @@ client.on_message = on_message
 client.on_log = on_log
 
 client.connect(host=broker_ip)
-client.loop_start() #this has been missing!! not sure if it goes before or after connect
+client.loop_start()
 while not client.connected_flag: #wait in loop
     print("waiting for connection ...")
     sleep(1)
@@ -42,8 +44,6 @@ if client.bad_connection_flag:
     sys.exit()
 
 interrupt = False
-
-
 while True:
     while interrupt is False:
         if ldr.value < 0.1:
