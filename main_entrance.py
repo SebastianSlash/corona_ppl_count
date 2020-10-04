@@ -10,9 +10,9 @@ topic_visitors = "metrics/visitors"
 # topic_statistic = "metrics/statistics"
 # topic_close = "order/close"
 
-def on_msg_statistic(cleint, userdata, message):
-    t = time.localtime()
-    current_time = time.strftime("%H:%M:%S", t)
+# def on_msg_statistic(cleint, userdata, message):
+#     t = time.localtime()
+#     current_time = time.strftime("%H:%M:%S", t)
 
 # def on_msg_close(client, userdata, message):
 #     if message == 0:
@@ -95,6 +95,7 @@ led_red.off()
 led_green.on()
 interrupt = False
 
+client.publish(topic_visitors, Hall.get_count())
 while True:
     print("Besucher: ", Hall.get_count())
     led_red.off()
@@ -113,6 +114,7 @@ while True:
         if begin_full:
             print("Die Halle ist derzeit voll.")
             print("Bitte haben sie Geduld.")
+            led_green.off()
             led_red.on()
             begin_full = False
 
