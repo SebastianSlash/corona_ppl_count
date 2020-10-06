@@ -11,8 +11,8 @@ from client_functions import get_device_topic, append_list_as_row, create_statis
 broker_ip = "192.168.178.56"
 Hall = Venue(capacity=10) # create venue object and set venue capacity
 ldr = LightSensor(4)
-led_red = LED(17)
-led_green = LED(18)
+signal_red = LED(17)
+signal_green = LED(18)
 # -----------------------------------------------------------------------------
 
 def on_msg_statistic(cleint, userdata, message):
@@ -62,7 +62,7 @@ def on_log(client, userdata, level, buf):
 statistic_file = create_statistic_file() # creates file to save statistics
 entrance_topic = "entrance/+/people" # wildcard for all devices publishing in entrance
 exit_topic = "exit/+/people" # wildcard for all devices publishing in exit
-topic = get_device_topic("entrance") # set topic of this pi
+topic = get_device_topic("entrance") # <== set topic of this pi 
 topic_visitors = "metrics/visitors" # topic for live update of visitor count
 topic_statistic = "metrics/statistic" # topic to save statistics
 
@@ -89,8 +89,8 @@ if client.bad_connection_flag:
     client.loop_stop()    #Stop loop
     sys.exit()
 
-led_red.off()
-led_green.on()
+signal_red.off()
+signal_green.on()
 
 client.publish(topic_statistic, 0)
 client.publish(topic_visitors, Hall.get_count())
@@ -98,8 +98,8 @@ client.publish(topic_visitors, Hall.get_count())
 interrupt = False
 while True:
     print("Besucher: ", Hall.get_count())
-    led_red.off()
-    led_green.on()
+    signal_red.off()
+    signal_green.on()
     while interrupt is False:
         if ldr.value < 0.1:
             client.publish(topic, 1)
@@ -114,8 +114,8 @@ while True:
         if begin_full:
             print("Die Halle ist derzeit voll.")
             print("Bitte haben sie Geduld.")
-            led_green.off()
-            led_red.on()
+            signal_green.off()
+            signal_red.on()
             begin_full = False
 
 sleep(5)
